@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  nginx:
+    build: .
+    image: argent-nginx:latest
+    container_name: argent-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./conf.d:/etc/nginx/templates
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/www/certbot
+    networks:
+      - argent-shared-network
+
+  certbot:
+    image:  wmnnd/nginx-certbot:latest
+    container_name: argent-certbot
+    restart: always
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/www/certbot
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: >
+      /bin/sh -c "
+      trap exit TERM;
+      while :; do
+        certbot renew --deploy-hook 'docker exec argent-nginx nginx -s reload';
+        sleep 12h & wait $${!};
+      done;
+      "
+
+volumes:
+  certbot-etc:
+  certbot-var:
+
+networks:
+  argent-shared-network:
+    external: true
