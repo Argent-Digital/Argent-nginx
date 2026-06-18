@@ -5,8 +5,8 @@ server {
     resolver 127.0.0.11 valid=30s;
 
     location /yookassa_webhook {
-        set $pay_backend "${PAY_BACKEND}";
-        proxy_pass $pay_backend;
+        set $$pay_backend "${PAY_BACKEND}";
+        proxy_pass $$pay_backend;
 
         allow 185.71.76.0/27;
         allow 185.71.77.0/27;
@@ -16,29 +16,29 @@ server {
         allow 127.0.0.1; 
         deny all;
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $$host;
+        proxy_set_header X-Real-IP $$remote_addr;
+        proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $$scheme;
     }
 
     location /docs {
-        set $pay_backend "${PAY_BACKEND}/docs";
-        proxy_pass $pay_backend;
+        set $$pay_backend "${PAY_BACKEND}/docs";
+        proxy_pass $$pay_backend;
         
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $$host;
+        proxy_set_header X-Real-IP $$remote_addr;
     }
 
     location / {
         set $pay_backend "${PAY_BACKEND}";
         
-        proxy_pass $pay_backend;
+        proxy_pass $$pay_backend;
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Host $$host;
+        proxy_set_header X-Real-IP $$remote_addr;
+        proxy_set_header X-Forwarded-For $$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $$scheme;
 
         proxy_connect_timeout 5s;
         proxy_read_timeout 30s;
