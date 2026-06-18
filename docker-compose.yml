@@ -9,6 +9,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - NGINX_ENVSUBST_FILTER=BOT_DOMAIN BOT_BACKEND CORE_DOMAIN CORE_BACKEND PAY_DOMAIN PAY_BACKEND VPN_DOMAIN VPN_BACKEND
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./conf.d:/etc/nginx/templates
