@@ -18,7 +18,7 @@ services:
       - argent-shared-network
 
   certbot:
-    image:  wmnnd/nginx-certbot:latest
+    image:  certbot/certbot:latest
     container_name: argent-certbot
     restart: always
     volumes:
